@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="nl-NL">
+  <head>
+    <style></style>
+    <meta charset="UTF-8">
+  </head>
+  <body style="font-size: 10.0pt; color: black; font-family: 'trebuchetms'; width: 100%;">
+    {% for dtls in cast %}
+      <table border="0" width="95%" align="center">
+        <tr>
+          <td>
+            <br>
+            <br>
+
+            {% if dtls.documenttemplate_isheaderenabled == 'False' %}
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <p style="color: white; font-size: 5.0pt;">--</p>
+            {% else %}
+              <p style="color: white; font-size: 5.0pt;">--</p>
+            {% endif %}
+
+            {{ dtls.headertext }}
+            <br>
+
+            <div>
+              <table width="100%">
+                <tr>
+                  <td width="7%" valign="top"></td>
+                  <td width="60%" valign="top">
+                    {% if dtls.customer_type == 'Organisation' %}
+                      <p>
+                        {{ dtls.customer_name }}
+                      </p>
+                    {% else %}
+                      {% if dtls.permitterminationreason_terminatereasonname == 'OVERLIJDEN' %}
+                        <p>Aan de erven van</p>
+                      {% endif %}
+                      <p>
+                        {{- dtls.customer_Initials | capitalize }}
+                        {{ dtls.customer_middlename | downcase }}
+                        {{ dtls.customer_lastname | capitalize -}}
+                      </p>
+                    {% endif %}
+                    <p>
+                      {{- dtls.address_street | capitalize }}
+                      {{ dtls.address_number | capitalize }}
+                      {{ dtls.address_numberletter | capitalize }}
+                      {{ dtls.address_numberaddition | capitalize -}}
+                    </p>
+                    <p>
+                      {{- dtls.address_postalcode | capitalize }}
+                      {{ dtls.address_city -}}
+                    </p>
+                  </td>
+                  <td width="15%" valign="top">
+                    <p style="font-size: 8.0pt;">
+                      <b>Amersfoort,</b>
+                    </p>
+                    <p style="font-size: 8.0pt;">
+                      <b>Productnummer:</b>
+                    </p>
+                    <p style="font-size: 8.0pt;">
+                      <b>Betreft:</b>
+                    </p>
+                  </td>
+
+                  <td width="18%" valign="top">
+                    <p style="font-size: 8.0pt;">
+                      {{ dtls.today | date: 'dd-MM-yyyy' }}
+                    </p>
+                    <p style="font-size: 8.0pt;">
+                      {{ dtls.permit_permitnumber }}
+                    </p>
+                    <p style="font-size: 8.0pt;">Beëindiging</p>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <div style="line-height: 13pt; text-align: left; width: 95%; margin: 0 auto;">
+        <p>
+          <br>
+          <br>
+          Geachte heer/mevrouw,
+          <br>
+          <br>
+          ParkeerService geeft in opdracht van de gemeente {{ dtls.tenant_name }} de parkeerproducten uit.
+          <br>
+          <br>
+          {% if dtls.permitterminationreason_terminatereasonname == 'VERZOEK_KLANT' %}
+            Op uw verzoek is uw {{ dtls.permit_permittype }} voor {{ dtls.zone_description }} per
+            {{ dtls.permit_enddatetime | date: 'dd-MM-yyyy' }} beëindigd. Dit met inachtneming van de opzegtermijn in de
+            algemene voorwaarden.
+            <br>
+          {% else %}
+            ParkeerService heeft de {{ dtls.permit_permittype }} voor {{ dtls.zone_description }} per
+            {{ dtls.permit_enddatetime | date: 'dd-MM-yyyy' }} beëindigd.
+            <br>
+            <br>
+            {% case dtls.permitterminationreason_terminatereasonname %}
+              {% when 'OVERLIJDEN' %}
+                <b>Beëindiging</b> <br>
+                Bij een controle is gebleken dat {{ dtls.customer_Initials | capitalize }}
+                {{ dtls.customer_middlename | downcase }}
+                {{ dtls.customer_lastname | capitalize }} is overleden. Allereerst willen wij u condoleren. Tot heden
+                had {{ dtls.customer_Initials | capitalize }}
+                {{ dtls.customer_middlename | downcase }}
+                {{ dtls.customer_lastname | capitalize }} een {{ dtls.permit_permittype }}.
+                <br>
+                <br>
+                Een vergunning is persoonsgebonden, deze is niet overdraagbaar aan anderen. Door overlijden verliest de
+                vergunning zijn geldigheid omdat niet meer aan de voorwaarden van uitgifte wordt voldaan.
+                <br>
+
+              {% when 'VERHUIZING' %}
+                <b>Beëindiging</b>
+                <br>
+                We hebben uw parkeerproduct beëindigd. De reden voor de beëindiging is dat u volgens de Basisregistratie
+                Personen (BRP) niet meer woont op het adres waarvoor het parkeerproduct is uitgegeven. Om die reden is
+                uw parkeerproduct niet meer geldig.
+                <br>
+
+              {% when 'KEURING' %}
+                U heeft onlangs een keuring ondergaan. Uit de keuring blijkt dat u niet in aanmerking komt voor de
+                {{ dtls.permit_permittype }}.
+                <br>
+                Binnen een paar dagen ontvangt u van ons het keuringrapport.
+                <br>
+
+              {% when 'INTREKKING' %}
+                <b>Intrekking</b>
+                <br>
+                Bij een controle is gebleken dat het product {{ dtls.permit_permittype }} onrechtmatig is verstrekt. Wij
+                hebben daarom besloten uw {{ dtls.permit_permittype }} in te trekken omdat u hier geen recht op heeft.
+                <br>
+            {% endcase %}
+          {% endif %}
+          <br>
+
+          <b>Restitutie</b>
+          <br>
+          Als u recht heeft op restitutie ontvangt u het bedrag binnen 14 dagen op het bij ons bekende IBAN.
+          <br>
+          <br>
+
+          {% if dtls.permitterminationreason_terminatereasonname != 'VERZOEK_KLANT' %}
+            <b>Besluit</b>
+            <br>
+            De beslissing is gebaseerd op de Parkeerverordening en de bij besluit vastgestelde criteria voor de uitgifte
+            van parkeervergunningen. De regelgeving van de gemeente {{ dtls.tenant_name }} kunt u opvragen via de
+            website <a href="https://www.overheid.nl/" style="color: blue">www.overheid.nl</a>.
+            <br>
+            <br>
+            {% case dtls.tenant_name %}
+              {% when 'Alphen aan den Rijn' %}
+                <b>Bezwaarprocedure</b>
+                <br>
+                Bent u het niet eens met dit besluit? Dan kunt u binnen 6 weken na verzenddatum van deze brief een
+                bezwaarschrift indienen. Het bezwaarschrift kunt u sturen naar het college van burgemeester en wethouders van Alphen aan den Rijn: Postbus 13, 2400 AA Alphen aan den Rijn. <br>
+            
+              {% when 'Amersfoort' %}
+                <b>Bent u het niet eens met het besluit?</b> 
+                <br>
+                Op grond van de Algemene wet bestuursrecht kan tegen dit besluit een bezwaarschrift worden ingediend
+                binnen zes weken na de dag waarop dit besluit is verzonden. Het gemotiveerde bezwaarschrift en een
+                kopie van het besluit waartegen bezwaar wordt gemaakt dienen te worden gericht aan het college van
+                burgemeester en wethouders van Amersfoort, Postbus 489, 3800 AL Amersfoort. 
+                <br>
+            
+              {% when 'Barneveld' %}
+                <b>Bent u het niet eens met dit besluit?</b>
+                <br>
+                Wanneer u het niet eens bent met dit besluit, kunt u op grond van de Algemene wet bestuursrecht een
+                bezwaarschrift indienen.
+                <br>
+                <br>
+                <b>Wanneer kan dat?</b>
+                <br>
+                Een bezwaarschrift moet binnen 6 weken na bekendmaking van dit besluit worden ingediend. Deze termijn
+                begint op de dag na de dag van verzending of uitreiking die op het besluit staat vermeld.
+                <br>
+                <br>
+                <b>Bij wie maakt u bezwaar?</b>
+                <br>
+                U kunt het bezwaarschrift indienen bij de heffingsambtenaar van de gemeente Barneveld.
+                <br>
+                <br>
+                <ul style="list-style-type:none">
+                  <b>
+                    <li>De heffingsambtenaar van de gemeente Barneveld</li>
+                    <li>Postbus 63</li>
+                    <li>3770 AB Barneveld</li>
+                  </b>
+                </ul>
+                De heffingsambtenaar zal na heroverweging een beslissing op uw bezwaarschrift nemen.
+                <br>
+                <br>
+                <b>Wat moet er in het bezwaarschrift staan?</b>
+                <br>
+                Het bezwaarschrift moet in elk geval de volgende gegevens bevatten:
+                <br>
+                <ol>
+                  <li>uw naam en adres;</li>
+                  <li>de datum;</li>
+                  <li>een omschrijving van het besluit waartegen het bezwaar zich richt;</li>
+                  <li>de gronden (redenen) van het bezwaar;</li>
+                  <li>uw handtekening.</li>
+                </ol>
+            
+              {% when 'Bergen' %}
+                <b>Bezwaar</b> 
+                <br>
+                Hoe maakt u bezwaar? 
+                <br>
+                Stuur uw bezwaarschrift aan het college: 
+                <br>
+                <br>
+                Gemeente Bergen 
+                <br>
+                College van burgemeester en wethouders 
+                <br>
+                Postbus 175 
+                <br>
+                1860 AD Bergen
+                <br>
+                <br>
+                In uw bezwaarschrift moet in ieder geval het volgende staan:
+                <br>
+                <ul style="list-style-type:none">
+                  <li>- uw naam, adres en graag ook uw telefoonnummer;</li>
+                  <li>
+                    - een duidelijke omschrijving van het besluit waartegen u bezwaar maakt (u kunt bijvoorbeeld de
+                    datum en ons kenmerk van het besluit vermelden of een kopie meesturen);
+                  </li>
+                  <li>- de reden waarom u bezwaar maakt;</li>
+                  <li>de datum;</li>
+                  <li>uw handtekening.</li>
+                </ul>
+                <br>
+                <b>Voorlopige voorziening</b> 
+                <br>
+                Is er spoed en kunt u een beslissing op uw bezwaarschrift niet afwachten? Dan kunt u een voorlopige
+                voorziening aanvragen. Daarmee vraagt u de rechter om de werking van het besluit van de gemeente uit
+                te stellen. Een voorlopige voorziening aanvragen kan alleen als u een bezwaarschrift heeft ingediend.
+                Voor de behandeling van uw aanvraag moet u griffierecht betalen aan de rechtbank. U vraagt een
+                voorlopige voorziening schriftelijk aan bij de voorzieningenrechter van de rechtbank Noord-Holland,
+                Postbus 1621, 2003 BR.
+                <br>
+            
+              {% when 'Gouda' %}
+                <b>Bent u het niet eens met dit besluit? </b>
+                <br>
+                Neem dan contact met ons op voor meer informatie of om uw vragen te stellen. U kunt bellen met uw
+                contactpersoon. Vaak wordt dan al veel duidelijker en opgelost.
+                <br>
+                <br>
+                <b>Bezwaarschrift</b>
+                <br>
+                Komen we er dan toch niet uit, dan kunt u een bezwaarschrift indienen. Dit mag overigens ook direct,
+                zonder eerst te bellen. Een bezwaarschift kunt u indienen binnen zes weken na de dag waarop dit
+                besluit is verzonden. Het besluit blijft ook bij het indienen van een bezwaarschrift gewoon geldig.
+                <br>
+                <br>
+                <b>Hoe dien ik een bezwaar in?</b>
+                <br>
+                U kunt uw bezwaar online indienen. Hier heeft u DigiD voor nodig (of e-Herkenning). Ga hiervoor naar
+                de website <a href="https://www.gouda.nl/" style="color: blue">www.gouda.nl</a>.
+                <br>
+                <br>
+                <b>Maakt u geen gebruik van het online bezwaarformulier?</b>
+                <br>
+                Dan kunt u uw bezwaar sturen naar:
+                <br>
+                College van burgemeester en wethouders van Gouda
+                <br>
+                t.a.v. de bezwaarschriftencommissie Gouda
+                <br>
+                Postbus 1086
+                <br>
+                2800 BB Gouda
+                <br>
+                <br>
+                <b>Wat moet er in een bezwaarschrift staan?</b>
+                <br>
+                Zet in elk geval in uw bezwaarschrift:
+                <br>
+                <ul style="list-style-type:none">
+                  <li>- uw naam, adres, datum en handtekening;</li>
+                  <li>- de datum waarop u het bezwaarschrift verstuurt;</li>
+                  <li>- een omschrijving van het besluit waar u bezwaar tegen maakt;</li>
+                  <li>- het zaak- of werkprocesnummer van het besluit;</li>
+                  <li>- de redenen waarom u bezwaar maakt;</li>
+                  <li>- als dat mogelijk is, het telefoonnummer en e-mailadres waarop u bereikbaar bent.</li>
+                </ul>
+                Om u sneller te kunnen helpen is het handig als u een kopie meestuurt van het besluit waar u bezwaar
+                tegen maakt.
+                <br>
+                <br>
+                <b>Voorlopige voorziening</b>
+                <br>
+                Indien u op korte termijn uitvoering van het besluit wilt voorkomen, dan kunt u de
+                voorzieningenrechter van de Rechtbank, Postbus 20302, 2500 EH Den Haag, vragen een voorlopige
+                voorziening te treffen. Een verzoek om een voorlopige voorziening kunt u alleen indienen als u ook
+                bezwaar hebt gemaakt. Bovendien moet er sprake zijn van een spoedeisend belang. U kunt ook om een
+                voorlopige voorziening vragen via
+                <a href="http://loket.rechtspraak.nl/bestuursrecht" style="color: blue"
+                  >http://loket.rechtspraak.nl/bestuursrecht</a
+                >. Daarvoor heeft u een DigiD nodig.
+                <br>
+            
+                {% when 'Hilversum' %}
+                <b>Bezwaar</b>
+                <br>
+                Tegen dit besluit kunt u binnen 6 weken na de verzending van deze brief een schriftelijk bezwaarschrift indienen. Het bezwaarschrift stuurt u naar het college van burgemeester en wethouders van de gemeente Hilversum (postbus 9900, 1201 GM Hilversum).
+                <br>
+                In het bezwaarschrift zet u:
+                <ul style="list-style-type:none">
+                <li>uw naam en adres;</li>
+                <li>de datum van het bezwaarschrift;</li>
+                <li>een omschrijving van het besluit waartegen u bezwaar maakt;</li>
+                <li>waarom u het niet eens bent met ons besluit.</li>
+                </ul>               
+                Vergeet u niet het bezwaarschrift te ondertekenen? Stuur een kopie van dit besluit mee met uw bezwaarschrift.
+                <br>
+                Mocht u liever digitaal een bezwaarschrift indienen, dan kan dat ook. U stuurt uw bezwaar online in met DigiD of eHerkenning. Via
+                <a href="https://hilversum.nl/klacht-bezwaar-beroep/bezwaar-tegen-gemeentelijke-besluiten" style="color: blue">www.hilversum.nl/klacht-bezwaar-beroep/bezwaar-tegen-gemeentelijke-besluiten</a> 
+                kunt u uw digitale bezwaarschrift indienen. Ook vindt u daar verdere informatie over het indienen van een bezwaarschrift.
+                <br>
+            
+              {% when 'Hoogeveen' %}
+                <b>Bezwaar</b>
+                <br>
+                Op grond van de Algemene wet bestuursrecht kan tegen dit besluit een bezwaarschrift worden ingediend
+                binnen zes weken na de dag waarop dit besluit is verzonden. Het gemotiveerde bezwaarschrift en een
+                kopie van het besluit waartegen bezwaar wordt gemaakt dienen te worden gericht aan het college van
+                burgemeester en wethouders van Hoogeveen, Postbus 489, 3800 AL Amersfoort.
+                <br>
+            
+              {% when 'Lelystad' %}
+                <b>Bezwaarprocedure</b>
+                <br>
+                Bovenstaande beslissing wordt op grond van Algemene wet bestuursrecht (Awb) aangemerkt als een
+                besluit. Op grond van de Algemene wet bestuursrecht kan tegen dit besluit een bezwaarschrift worden
+                ingediend binnen zes weken na de dag waarop dit besluit is verzonden. Het gemotiveerde bezwaarschrift
+                voorzien van een handtekening en een kopie van het besluit waartegen bezwaar wordt gemaakt dienen te
+                worden gericht aan college van burgemeester en wethouders van Lelystad, Postbus 91, 8200 AB Lelystad.<br>
+            
+              {% when 'Nieuwegein' %}
+                <b>Bezwaar</b>
+                <br>
+                Tot slot maken wij u erop attent dat u van de Algemene wet bestuursrecht binnen 6 weken na de
+                verzenddatum van deze brief een bezwaarschrift kunt indienen. Het bezwaarschrift kunt u sturen naar
+                Gemeente Nieuwegein t.a.v. Juridische Zaken, Postbus 1, 3430 AA Nieuwegein.
+                <br>
+            
+              {% when 'Nijkerk' %}
+                <b>Bezwaar</b>
+                <br>
+                Tegen dit besluit kan een belanghebbende bezwaar maken bij burgemeester en wethouders van Nijkerk. Het
+                bezwaarschrift moet binnen zes weken na de verzenddatum van deze brief worden ingediend. Met een
+                elektronische handtekening (DigiD) kan bezwaar worden gemaakt via
+                <a href="https://www.nijkerk.eu/bezwaarmaken" style="color: blue">Bezwaar maken | Nijkerk</a>.
+                <br>
+            
+              {% when 'Woerden' %}
+                <b>Bezwaar</b>
+                <br>
+                Tot slot maken wij u erop attent dat u van de Algemene wet bestuursrecht binnen 6 weken na de
+                verzenddatum van deze brief een bezwaarschrift kunt indienen. Het bezwaarschrift kunt u sturen naar
+                Coöperatie ParkeerService U.A., t.a.v. de afdeling Parkeerrechten, Postbus 489, 3800 AL Amersfoort.
+                <br>
+            
+              {% when 'Zeist' %}
+                Mogelijk komt u in aanmerking voor een garage abonnement. Raadpleeg hiervoor de website
+                <a href="https://Zeist.parkeerservice.nl/" style="color: blue">Zeist.parkeerservice.nl</a>.
+                <br>
+                <b>Bezwaar maken</b>
+                <br>
+                Als een besluit uw belang rechtstreeks treft, kunt u hiertegen bezwaar maken binnen zes weken na de
+                dag waarop het besluit bekend is gemaakt. U doet dit door een bezwaarschrift in te dienen bij B & W
+                Gemeente Zeist, Postbus 513, 3700 AM Zeist.
+                <br>
+                <br>
+                Het bezwaarschrift dient in ieder geval te bevatten:
+                <br>
+                <ul style="list-style-type:none">
+                  <li>- naam en adres van de indiener;</li>
+                  <li>- datum;</li>
+                  <li>- een omschrijving van het besluit waartegen het bezwaar zich richt;</li>
+                  <li>- de gronden van het bezwaar;</li>
+                  <li>- handtekening van de indiener.</li>
+                </ul>
+                Een bezwaarschrift is tijdig ingediend, indien u dit voor het einde van de termijn:
+                <br>
+                <ul style="list-style-type:none">
+                  <li>- bij de publieksbalie heeft ingeleverd (u ontvangt dan een ontvangstbevestiging);</li>
+                  <li>
+                    - via de gewone post heeft verzonden (datum poststempel) en dit binnen een week is ontvangen bij
+                    het bestuursorgaan;
+                  </li>
+                  <li>
+                    - aangetekend heeft verzonden (datum poststempel) en dit binnen een week is ontvangen bij het
+                    bestuursorgaan;
+                  </li>
+                  <li>- per fax heeft verzonden (datum fax).</li>
+                </ul>
+                Na indiening van het bezwaarschrift ontvangt u van het bestuursorgaan nader bericht over de verdere
+                procedure.
+                <br>
+                <br>
+                <b>Voorlopige voorziening</b>
+                <br>
+                Als u een bezwaarschrift heeft ingediend en indien onverwijlde spoed dat gelet op de betrokken
+                belangen vereist, kunt u een verzoek om voorlopige voorziening schriftelijk indienen bij de rechtbank
+                van Utrecht, Sector Bestuursrecht, Voorzieningenrechter, Postbus 13023, 3507 LA Utrecht. Aan deze
+                procedure zijn griffiekosten verbonden. Na indiening van het verzoek om voorlopige voorziening
+                ontvangt u nader bericht van de rechtbank over de verdere procedure.
+                <br>
+            
+              {% when 'Zandvoort' %}
+                <b>Bezwaar maken</b>
+                <br>
+                Als iemand het met een besluit niet eens is, kan hij of zij bezwaar maken. Dit moet wel binnen zes
+                weken na de verzenddatum van dit besluit.
+                <br>
+                <ul style="list-style-type:none">
+                  <li>
+                    - Dit kan digitaal met DigiD via
+                    <a href="https://www.zandvoort.nl/" style="color: blue">https://www.zandvoort.nl/</a>, klik op
+                    ‘producten of diensten op alfabet’ en daarna op ‘bezwaar gemeentelijk besluit’.
+                  </li>
+                  <li>
+                    - Of het kan met een brief (geen email) naar: Burgemeester en wethouder van Zandvoort, postbus 2,
+                    2040 AA Zandvoort.
+                  </li>
+                  <li>
+                    - Vanaf 1 januari 2018 voert de gemeente Haarlem taken uit voor de gemeente Zandvoort.
+                    Bezwaarschriften worden daarom behandeld door de gemeente Haarlem.
+                  </li>
+                </ul>
+                <br>
+                In de brief (het bezwaarschrift) moet staan:
+                <br>
+                <ul style="list-style-type:none">
+                  <li>- naam en adres bezwaarmaker;</li>
+                  <li>- datum waarop de brief wordt geschreven;</li>
+                  <li>- het besluit waartegen bezwaar wordt gemaakt;</li>
+                  <li>- het kenmerk van dit besluit;</li>
+                  <li>- waarom bezwaar wordt gemaakt;</li>
+                  <li>- handtekening.</li>
+                </ul>
+                En op de envelop in de linkerbovenhoek ‘bezwaar’.
+                <br>
+                <br>
+                Het is handig (maar niet verplicht) om uw mailadres te noemen.
+                <br>
+                <br>
+                <b>Voorlopige voorziening vragen</b>
+                <br>
+                Ook al maakt iemand bezwaar, wat in het besluit staat blijft gelden. Als de bezwaarmaker niet wil
+                wachten op het besluit op bezwaar, kan hij of zij naar de rechter gaan (een verzoek om een voorlopige
+                voorziening doen). De rechter kijkt dan of wat in het besluit staat, kan worden uitgesteld tot het
+                besluit op bezwaar is genomen. Dit verzoek kost geld (griffierechten).
+                <br>
+                <ul style="list-style-type:none">
+                  <li>
+                    - Het verzoek kan digitaal met DigiD via
+                    <a href="https://loket.rechtspraak.nl/bestuursrecht" style="color: blue"
+                      >https://loket.rechtspraak.nl/bestuursrecht</a
+                    >.
+                  </li>
+                  <li>
+                    - Of het kan met een brief naar: de Voorzieningenrechter, sector Bestuursrecht, postbus 1621, 2003
+                    BR Haarlem.
+                  </li>
+                </ul>
+            {% endcase %}
+          {% endif %}
+
+          <b>Wilt u meer weten?</b>
+          <br>
+          Onze contactgegevens en alle informatie over parkeerproducten vindt u op de website:
+          <a href="{{dtls.tenant_website}}" style="color: blue">{{ dtls.tenant_website }}</a>.
+          <br>
+          <br>
+
+          Met vriendelijke groet,
+          <br>
+          namens het college van burgemeester en wethouders van de gemeente {{ dtls.tenant_name -}}
+          <br>
+          <br>
+          <br>
+          Coöperatie ParkeerService U.A.
+          <br>
+          Medewerkers team Parkeerrechten
+        </p>
+      </div>
+    {% endfor %}
+  </body>
+</html>

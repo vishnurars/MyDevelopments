@@ -1,0 +1,217 @@
+<html>
+<head>
+</head>
+<body>
+<table border="0" width="95%" align="center">
+<tr>
+<td>
+{% for dtls in cast %}
+
+{% if dtls.documenttemplate_isheaderenabled == "False" %}
+<br><br><br><br><br>
+{% else %}
+<table width=100% border="0">
+<tr>
+    <td width=55% height=50%>
+        <table width=100% border="0">
+            <tr><td>{{dtls.headertext}}</td><tr>
+            <tr><td><br><br><br></td><tr>
+        </table>
+    </td>
+    <td width="45%" height=100%>
+        <table width=100% border="0">
+            <tr>
+                <td height=50%><br><br><br></td>
+            <tr>
+            <tr>
+                <td height=50%>
+                    {% if dtls.customer_type == "Organisation" %}
+                        <p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.customer_name | capitalize}} </font></span></p>
+                    {% else %}
+                        <p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.customer_Initials | capitalize}} {{dtls.customer_middlename | downcase}} {{dtls.customer_lastname | capitalize}} </font></span></p>
+                    {% endif %}
+                    <p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.address_street | capitalize}} {{dtls.address_number | capitalize}} {{dtls.address_numberletter | capitalize}} {{dtls.address_numberaddition | capitalize}}</font></span></p>
+                    <p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.address_postalcode | capitalize}} {{dtls.address_city}}</font></span></p>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+</table>
+<br>
+<br>
+{% endif %}
+
+<div style="line-height: 10pt;">
+<table>
+<tr>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>documentnummer</b></font></span></p>	
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>team</b></font></span></p>		
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>Beverwijk</b></font></span></p>		
+	</td>	
+</tr>
+<tr>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.permittype_code}}-{{dtls.permit_permitnumber}}</font></span></p>	
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial">Publieke Dienstverlening</font></span></p>		
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.today | date: "dd-MM-yyyy"}}</font></span></p>		
+	</td>	
+</tr>
+<tr>
+	<td colspan="3">&nbsp;</td>
+</tr>
+<tr>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>uw kenmerk/uw brief van</b></font></span></p>	
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>behandeld door</b></font></span></p>		
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>verzonden</b></font></span></p>		
+	</td>	
+</tr>
+<tr>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial">&nbsp;</font></span></p>	
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial">KCC</font></span></p>		
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.today | date: "dd-MM-yyyy"}}</font></span></p>		
+	</td>	
+</tr>
+<tr>
+	<td colspan="3">&nbsp;</td>
+</tr>
+<tr>
+	<td colspan="3"><p><span style='font-size:11.0pt'><font color="black" face="arial"><b>onderwerp</b></font></span></p></td>
+</tr>
+<tr>
+	<td colspan="3"><p><span style='font-size:11.0pt'><font color="black" face="arial">Toewijzing {{dtls.permit_permittypename}}</font></span></p></td>
+</tr>
+</table>
+</div>
+<br>
+</td>
+</tr>
+</table>
+
+<table border="0" width="95%" align="center">
+<tr>
+<td>
+<div style="line-height: 13pt;">
+<br>
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Geachte heer/mevrouw {{dtls.customer_middlename | capitalize}} {{dtls.customer_lastname | capitalize}},</font></span></p>
+<br>
+</div>
+</td>
+</tr>
+</table>
+
+
+<table border="0" width="95%" align="center">
+<tr>
+<td>
+<div style="line-height: 13pt;">
+{% case dtls.permittype_code %}
+{% when 'BZR' %}
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">U heeft een {{dtls.permit_permittype}} voor {{dtls.zone_description}} aangevraagd. Hierbij kennen wij u de bezoekersregeling toe.</font></span></p>
+{% when 'BZO' %}
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">U heeft een {{dtls.permit_permittype}} voor {{dtls.zone_description}} aangevraagd. Hierbij kennen wij u de bezoekersontheffing toe.</font></span></p>
+{% else %}
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">U heeft een {{dtls.permit_permittype}} voor {{dtls.zone_description}} aangevraagd. Hierbij kennen wij u de parkeerontheffing toe.</font></span></p>
+{% endcase %}
+
+<span style='font-size:5.0pt'><font color="white" face="arial"> -- </font></span></p>
+{% if dtls.vehicle_formattedlicenseplate != null %} 
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Uw {{dtls.permit_permittype}} is geldig voor het volgende kenteken: {{dtls.vehicle_formattedlicenseplate}}.</font></span></p>
+{% endif %}
+{% if dtls.permittype_code == "BZR" %} 
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Met deze bezoekersregeling mag u in {{dtls.permit_enddatetime | date: "yyyy"}} maximaal 200 uur kentekens van bezoekers aanmelden. U kunt maar eenmaal per kalenderjaar de bezoekersregeling kopen. Indien u later in het jaar koopt, dan ontvangt u naar rato minder uren en betaalt u ook naar rato minder.</font></span></p>
+{% endif %}
+<span style='font-size:5.0pt'><font color="white" face="arial"> -- </font></span></p>
+
+{% case dtls.permittype_code %}
+{% when 'BZR' %}
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Uw {{dtls.permit_permittype}} is geldig van {{dtls.permit_startdatetime | date: "dd-MM-yyyy"}} tot en met {{dtls.permit_enddatetime | date: "dd-MM-yyyy"}}.<br><br>Op het gebruik van uw bezoekersregeling zijn voorwaarden van toepassing. Deze voorwaarden staan opgenomen in de ‘Nadere regels parkeren’. Van deze voorwaarden zijn enkel degene die zien op de bezoekersregeling van toepassing. Voor informatie waar u met uw bezoekersregeling mag parkeren raadpleegt u het document ‘Geldigheid parkeerontheffingen’.<br><br>
+Om gebruik te kunnen maken van uw bezoekersregeling dient u de volgende handelingen te verrichten:<br>
+<ul><li>Gebruikersaccount aanmaken</li><li>Kenteken toevoegen</li><li>Bezoek aanmelden</li></ul><br>
+Hoe u dit dient te doen staat weergegeven op onze website <a href="{{dtls.tenant_website}}" style="color: blue">{{dtls.tenant_website}}</a>.<br><br>
+U kunt meerdere voertuigen tegelijkertijd parkeren met deze regeling.</font></span></p>
+</font></span></p>
+{% when 'BZO' %}
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Uw {{dtls.permit_permittype}} is geldig van {{dtls.permit_startdatetime | date: "dd-MM-yyyy"}} tot en met {{dtls.permit_enddatetime | date: "dd-MM-yyyy"}}.<br><br>Op het gebruik van uw parkeerontheffing zijn voorwaarden van toepassing. Deze voorwaarden staan opgenomen in de ‘Nadere regels parkeren’. Van deze voorwaarden zijn enkel degene die zien op het type ontheffing dat aan u is toegekend van toepassing. Voor informatie waar u met uw ontheffing mag parkeren raadpleegt u het document ‘Geldigheid parkeerontheffingen’.<br><br>
+Om gebruik te kunnen maken van uw ontheffing dient u de volgende handelingen te verrichten:<br>
+<ul><li>Gebruikersaccount aanmaken</li><li>Kenteken toevoegen</li><li>Bezoek aanmelden</li></ul><br>
+Hoe u dit dient te doen staat weergegeven op onze website <a href="{{dtls.tenant_website}}" style="color: blue">{{dtls.tenant_website}}</a>.<br><br>
+U kunt maximaal één voertuig tegelijkertijd parkeren met deze ontheffing.</font></span></p>
+{% else %}
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Uw {{dtls.permit_permittype}} is geldig van {{dtls.permit_startdatetime | date: "dd-MM-yyyy"}} tot en met {{dtls.permit_enddatetime | date: "dd-MM-yyyy"}}.<br><br>Op het gebruik van uw ontheffing zijn voorwaarden van toepassing. Deze voorwaarden staan opgenomen in de ‘Nadere regels parkeren’. Van deze voorwaarden zijn enkel degene die zien op het type ontheffing dat aan u is toegekend van toepassing. Voor informatie waar u met uw ontheffing mag parkeren raadpleegt u het document ‘Geldigheid parkeerontheffingen’.</font></span></p>
+{% endcase %}
+<span style='font-size:5.0pt'><font color="white" face="arial"> -- </font></span></p>
+
+</div>
+</td>
+</tr>
+</table>
+
+<table border="0" width="95%" align="center">
+<tr>
+<td>
+<div style="line-height: 13pt;">
+{% case dtls.permittype_code %}
+{% when 'BZR' %}
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">
+<b>Wijzigingen</b><br>
+Mocht u in de loop van het jaar verhuizen, dan kan dit gevolgen hebben voor uw bezoekersregeling.</font></span></p>
+{% when 'BZO' %}
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">
+<b>Wijzigingen</b><br>
+Mocht u in de loop van het jaar verhuizen, dan kan dit gevolgen hebben voor uw ontheffing.</font></span></p>
+{% else %} 
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">
+<b>Wijzigingen</b><br>
+Als er iets verandert in uw situatie (u verhuist of u heeft een andere auto), dan kan dit gevolgen hebben voor uw ontheffing.
+</font></span></p>
+{% endcase %}
+<p><span style='font-size:5.0pt'><font color="white" face="arial"> -- </font></span></p>
+</div>
+</td>
+</tr>
+</table>
+
+<table border="0" width="95%" align="center">
+<tr>
+<td>
+<div style="line-height: 13pt;">
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial"><b>Wilt u meer weten?</b><br>
+Voor vragen kunt u ons bereiken per e-mail via <a href="mailto:{{dtls.tenant_email}}" style="color: blue">{{dtls.tenant_email}}</a> en via telefoonnummer {{dtls.tenant_telephoneno}}. Informatie over parkeerontheffingen, de 'Nadere regels parkeren', 'Geldigheid parkeerontheffingen' en wat u moet doen bij eventuele tussentijdse wijzigingen vindt u op de website: <a href="{{dtls.tenant_website}}" style="color: blue">{{dtls.tenant_website}}</a>.</font></span></p>
+<p><span style='font-size:5.0pt'><font color="white" face="arial"> -- </font></span></p>
+
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Hoogachtend,</font></span></p>
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">burgemeester en wethouders van {{dtls.tenant_name}},</font></span></p>
+<p><span style='font-size:5.0pt'><font color="white" face="arial"> -- </font></span></p>
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">namens hen,</font></span></p>
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Strategisch manager,</font></span></p>
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">D. van Schoten</font></span></p>
+<p><span style='font-size:5.0pt'><font color="white" face="arial"> -- </font></span></p>
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Dit is een automatisch gegenereerde brief en daarom niet ondertekend.</font></span></p>
+
+</div>
+</td>
+</tr>
+</table>
+{% endfor %}
+</body>
+</html>

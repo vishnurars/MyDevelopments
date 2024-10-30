@@ -1,0 +1,149 @@
+<html>
+<head>
+</head>
+<body>
+<table border="0" width="95%" align="center">
+<tr>
+<td>
+{% for dtls in cast %}
+
+{% if dtls.documenttemplate_isheaderenabled == "False" %}
+<br><br><br><br><br>
+{% else %}
+<table width=100% border="0">
+<tr>
+    <td width=55% height=50%>
+        <table width=100% border="0">
+            <tr><td>{{dtls.headertext}}</td><tr>
+            <tr><td><br><br><br></td><tr>
+        </table>
+    </td>
+    <td width="45%" height=100%>
+        <table width=100% border="0">
+            <tr>
+                <td height=50%><br><br><br></td>
+            <tr>
+            <tr>
+                <td height=50%>
+                    {% if dtls.customer_type == "Organisation" %}
+                        <p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.customer_name | capitalize}} </font></span></p>
+                    {% else %}
+                        <p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.customer_Initials | capitalize}} {{dtls.customer_middlename | downcase}} {{dtls.customer_lastname | capitalize}} </font></span></p>
+                    {% endif %}
+                    <p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.address_street | capitalize}} {{dtls.address_number | capitalize}} {{dtls.address_numberletter | capitalize}} {{dtls.address_numberaddition | capitalize}}</font></span></p>
+                    <p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.address_postalcode | capitalize}} {{dtls.address_city}}</font></span></p>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+</table>
+<br>
+<br>
+{% endif %}
+
+<div style="line-height: 10pt;">
+<table>
+<tr>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>documentnummer</b></font></span></p>	
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>team</b></font></span></p>		
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>Beverwijk</b></font></span></p>		
+	</td>	
+</tr>
+<tr>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.permittype_code}}-{{dtls.permit_permitnumber}}</font></span></p>	
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial">Publieke Dienstverlening</font></span></p>		
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.today | date: "dd-MM-yyyy"}}</font></span></p>		
+	</td>	
+</tr>
+<tr>
+	<td colspan="3">&nbsp;</td>
+</tr>
+<tr>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>uw kenmerk/uw brief van</b></font></span></p>	
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>behandeld door</b></font></span></p>		
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>verzonden</b></font></span></p>		
+	</td>	
+</tr>
+<tr>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial">&nbsp;</font></span></p>	
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial">KCC</font></span></p>		
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.today | date: "dd-MM-yyyy"}}</font></span></p>		
+	</td>	
+</tr>
+<tr>
+	<td colspan="3">&nbsp;</td>
+</tr>
+<tr>
+	<td colspan="3"><p><span style='font-size:11.0pt'><font color="black" face="arial"><b>onderwerp</b></font></span></p></td>
+</tr>
+<tr>
+	<td colspan="3"><p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.permit_permittypename}} stopgezet</font></span></p></td>
+</tr>
+</table>
+</div>
+<br>
+</td>
+</tr>
+</table>
+
+
+<table border="0" width="95%" align="center">
+<tr>
+<td>
+<div style="line-height: 13pt;">
+<br>
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Geachte heer/mevrouw {{dtls.customer_middlename | capitalize}} {{dtls.customer_lastname | capitalize}},</font></span></p>
+<br>
+<p><span style='font-size:11.0pt;'><font color="black" face="arial">U heeft onlangs een betalingsherinnering van ons ontvangen voor het verlengen van uw {{dtls.permit_permittype}}.</font></span></p>
+<span style='font-size:5.0pt'><font color="white" face="arial"> -- </font></span></p>
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Helaas hebben wij de betaling nog niet ontvangen. Uw {{dtls.permit_permittype}} is nu verlopen.</font></span></p>
+<span style='font-size:5.0pt'><font color="white" face="arial"> -- </font></span></p>
+U kunt op ieder moment weer een nieuwe {{dtls.permit_permittype}} aanvragen. </font></span></p>
+<span style='font-size:5.0pt'><font color="white" face="arial"> -- </font></span></p>
+</div>
+</td>
+</tr>
+</table>
+
+
+<table border="0" width="95%" align="center">
+<tr>
+<td>
+<div style="line-height: 13pt;">
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial"><b>Wilt u meer weten?</b><br>
+Voor vragen kunt u ons bereiken per e-mail via <a href="mailto:{{dtls.tenant_email}}" style="color: blue">{{dtls.tenant_email}}</a> en via telefoonnummer {{dtls.tenant_telephoneno}}. Alle informatie over parkeerproducten vindt u op de website: <a href="{{dtls.tenant_website}}" style="color: blue">{{dtls.tenant_website}}</a>.</font></span></p>
+<p><span style='font-size:5.0pt'><font color="white" face="arial"> -- </font></span></p>
+
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Met vriendelijke groet,</font></span></p>
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">namens het college van burgemeester en wethouders van de gemeente {{dtls.tenant_name}},</font></span></p>
+<p><span style='font-size:5.0pt'><font color="white" face="arial"> -- </font></span></p>
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Team Parkeren</font></span></p>
+
+</div>
+</td>
+</tr>
+</table>
+{% endfor %}
+</body>
+</html>

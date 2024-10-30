@@ -1,0 +1,255 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style></style>
+  </head>
+  <body>
+    {% comment %} Version 1.0 {% endcomment %}
+    {% for dtls in cast %}
+      <table border="0" width="93%" align="center" style="font-size:10pt;font-family:arial;">
+        <tr>
+          <td>
+            {% if dtls.documenttemplate_isheaderenabled == 'False' %}
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+            {% else %}
+              <table width="100%" border="0">
+                <tr>
+                  <td>
+                    <b>Vergunningen, Toezicht en Handhaving</b>
+                    <br>Afdeling Vergunningen
+                    <br>Postadres: Postbus 16200, 3500 CE Utrecht
+                    <br>Bezoekadres: Stadsplateau 1, Utrecht
+                    <br>Telefoon: 14 030
+                    <br><a href="www.utrecht.nl/parkeren">www.utrecht.nl/parkeren</a><br>
+                  </td>
+                  <td align="right">
+                    <img height="3cm" align="right" src="T:/UTRECHT/DocumentTemplates/logo2.jpg">
+                  </td>
+                </tr>
+              </table>
+              <br>
+              <table width="100%" border="0" style="font-size:10pt;font-family:arial;">
+                <tr>
+                  <td height="50%">
+                    {% if dtls.customer_type == 'Organisation' %}
+                      {{ dtls.customer_name | capitalize -}}
+                      <br>
+                    {% else %}
+                      {{ dtls.customer_Initials | capitalize }}
+                      {{ dtls.customer_middlename | downcase }}
+                      {{ dtls.customer_lastname | capitalize -}}
+                      <br>
+                    {% endif %}
+                    {{ dtls.address_street | capitalize }}
+                    {{ dtls.address_number | capitalize }}
+                    {{ dtls.address_numberletter | capitalize }}
+                    {{ dtls.address_numberaddition | capitalize -}}
+                    <br>
+                    {{ dtls.address_postalcode | capitalize }}
+                    {{ dtls.address_city -}}
+                    <br>
+                  </td>
+                </tr>
+              </table>
+              <br>
+              <br>
+            {% endif %}
+
+            <table style="font-size:10.0pt;font-family:arial;">
+              <tr>
+                <td width="15%">
+                  <b>Behandeld door</b>
+                </td>
+                <td width="35%">Team Parkeren</td>
+                <td width="15%">
+                  <b>Ons kenmerk</b>
+                </td>
+                <td width="35%">
+                  {{ dtls.customer_id }}/{{ dtls.permitrequest_id }}
+                </td>
+              </tr>
+              <tr valign="top">
+                <td width="15%">
+                  <b>Doorkiesnummer</b>
+                </td>
+                <td width="35%">14 030</td>
+                <td width="15%">
+                  <b>Onderwerp</b>
+                </td>
+                <td width="35%">Wachtlijst {{ dtls.permitrequest_type }}</td>
+              </tr>
+              <tr>
+                <td width="15%">
+                  <b>E-mail</b>
+                </td>
+                <td width="35%"></td>
+                <td width="15%">
+                  <b></b>
+                </td>
+                <td width="35%">
+                </td>
+              </tr>
+              <tr>
+                <td width="15%">
+                  <b>Uw kenmerk</b>
+                </td>
+                <td width="35%">
+                </td>
+                <td width="15%">
+                  <b>Verzonden</b>
+                </td>
+                <td width="35%">
+                  {{ dtls.formatteddate }}
+                </td>
+              </tr>
+              <tr>
+                <td width="15%"></td>
+                <td width="35%"></td>
+                <td colspan="4">Bij antwoord datum, kenmerk en onderwerp vermelden</td>
+              </tr>
+            </table>
+
+            <br>
+            <br>
+            <div style="font-size:10.0pt;font-family:arial;">
+              {% case dtls.permittype_code %}
+                {% when 'ZRS', 'ZRH', 'ZRD', 'ZRU' %}
+                  Beste {{ dtls.customer_contactperson | capitalize }},<br>
+                  <br>
+                {% else %}
+                  Beste {{ dtls.customer_Initials | capitalize }}
+                  {{ dtls.customer_middlename | downcase }}
+                  {{ dtls.customer_lastname | capitalize }},<br>
+                  <br>
+              {% endcase %}
+              U hebt op {{ dtls.permitrequest_requestdate | date: 'dd-MM-yyyy' }} een {{ dtls.permitrequest_type }} aangevraagd
+              voor kenteken  
+              {% if dtls.vehicles_additional == '' %}
+                {{ dtls.vehicle_licenseplate }}
+              {% else %}
+                {{ dtls.vehicle_licenseplate }}, {{ dtls.vehicles_additional }}
+              {% endif %}
+              op bovenstaand adres.<br>
+              <br>
+              <b>Wachtlijst</b>
+              <br>Op dit moment is het niet mogelijk om aan u een {{ dtls.permitrequest_type }} toe te wijzen. Voor de
+              uitgifte van een {{ dtls.permitrequest_type }}
+              {% unless dtls.permittype_name contains 'Garage' %}
+                in uw rayon
+              {% else %}
+                in garage {{ dtls.permit_permittypename }}
+              {% endunless %}
+              bestaat een wachtlijst. Uw naam is per {{ dtls.permitrequest_requestdate | date: 'dd-MM-yyyy' }} op de wachtlijst geplaatst.<br>
+              <br>
+              Zodra u aan de beurt bent voor een {{ dtls.permit_permittypename }}, krijgt u van ons automatisch bericht.
+              Wij activeren uw {{ dtls.permit_permittypename }} direct.
+              {% if dtls.permittype_name contains 'Garage' %}
+                dan direct. U kunt de ingangsdatum niet zelf bepalen of uitstellen.
+                <br>Op <a href="www.utrecht.nl/wachtlijstparkeervergunningen">www.utrecht.nl/wachtlijstparkeervergunningen</a>
+                vindt u een indicatie van de wachttijd.<br>
+              {% else %}
+                U kunt de ingangsdatum niet zelf bepalen of uitstellen.<br>
+                Op <a href="www.utrecht.nl/wachtlijstparkeervergunningen">www.utrecht.nl/wachtlijstparkeervergunningen</a>
+                vindt u een indicatie van de wachttijd.<br>
+              {% endif %}
+              <br>
+              <!-- afhankelijkheid wachtlijst langer dan 6 maanden kan niet worden toegevoegd -->
+              {% if dtls.permittype_code == '1BW' and dtls.vehicle_licenseplate == '' %}
+                <b>Kenteken tijdig doorgeven</b>
+                <br>Uw aanvraag staat op dit moment zonder kenteken op de wachtlijst. Het is uw eigen verantwoordelijkheid
+                om het verloop van de wachtlijst in de gaten te houden en op tijd een kenteken door te geven voor uw
+                {{ dtls.permit_permittypename }}. Als u nog geen kenteken hebt doorgeven op het moment dat u aan de
+                beurt bent, vervalt uw aanvraag automatisch. Wij maken hierop geen uitzonderingen.<br>
+                <br>
+                <b>Online of telefonisch doorgeven</b>
+                <br>Zodra u een auto hebt kunt u het kenteken doorgeven via
+                <a href="www.utrecht.nl/parkeervraag">www.utrecht.nl/parkeervraag</a> of via onderstaand telefoonnummer.
+                Op <a href="www.utrecht.nl/parkeervergunningbewoner">www.utrecht.nl/parkeervergunningbewoner</a> kunt u
+                nalezen aan welke voorwaarden het kenteken moet voldoen.<br>
+                <br>
+                <b>Verloop wachtlijst</b>
+                <br>Wij sturen geen waarschuwing wanneer u bijna aan de beurt bent voor uw {{ dtls.permit_permittypename }}.
+                Kijk voor een indicatie van de wachttijd op
+                <a href="www.utrecht.nl/wachtlijstparkeervergunningen">www.utrecht.nl/wachtlijstparkeervergunningen</a>.
+                Deze informatie wordt één keer per twee weken bijgewerkt.<br>
+                <br>
+                Dit besluit is genomen op grond van artikel 5 van de Nadere regel uitgifte parkeervergunningen en
+                garageplaatsen 2020. Deze staan op
+                <a href="www.utrecht.nl/parkeerregels">www.utrecht.nl/parkeerregels</a>.<br>
+                <br>
+                
+              {% endif %}
+
+              <b>Wijzigingen doorgeven</b>
+              <br>Zijn er komende tijd veranderingen in uw situatie? Zoals een kentekenwijziging of een verhuizing? Geef dit
+              aan ons door via <a href="www.utrecht.nl/parkeervraag">www.utrecht.nl/parkeervraag</a>. Dit zorgt voor een
+              actuele wachtlijst.<br>
+              <br>
+              Dit besluit is genomen op grond van artikel 5 van de Nadere regel uitgifte parkeervergunningen en
+              garageplaatsen 2020. Deze staan op
+              <a href="www.utrecht.nl/parkeerregels">www.utrecht.nl/parkeerregels</a>.<br>
+              <br>
+              Wist u dat er ook (elektrische) deelauto’s bij u in de buurt staan? U kunt deze via verschillende
+              bedrijven huren. Handig voor als u af en toe een auto nodig heeft. Lees meer over de deelauto op
+              <a href="www.utrecht.nl/deelt">www.utrecht.nl/deelt</a>.<br>
+              <br>
+              <b>Vragen?</b>
+              <br>Hebt u vragen? Bel ons gerust via telefoonnummer 14 030 of stel uw vraag op onze website <a href="www.utrecht.nl/parkeervraag">www.utrecht.nl/parkeervraag</a>.<br>
+              <br>
+
+              <!-- AFSLUITING -->
+              {% case dtls.permittype_code %}
+                {% when 'BG2B','BG2L','BGD1','BGD2','BGP1','BGP2','GHUB','GJ5V','GJ7V','GKD','PRBD','PR5','OGAR','ZG20','BG','MG','ZG','G5','G7' %}
+                  Met vriendelijke groet,
+                  <br><img height="2.5cm" src="T:/UTRECHT/DocumentTemplates/Signature.png">
+                  <br>M. Prijs,
+                  <br>Hoofd Vergunningen<br>
+                {% else %}
+                  Met vriendelijke groet,<br>
+                  Namens burgemeester en wethouders,<br>
+                  <img height="2.5cm" src="T:/UTRECHT/DocumentTemplates/Signature.png"><br>
+                  M. Prijs,<br>
+                  Hoofd Vergunningen<br>
+                  <br>
+                  <b>Bezwaar maken</b>
+                  <br>Bent u het niet eens met het besluit van deze brief? Dan kunt u daartegen bezwaar maken. Dit moet u
+                  doen binnen 6 weken na de datum van deze brief. Dat kan als volgt:
+                  <table border="0">
+                    <tr>
+                      <td valign="top" align="right" width="5%">
+                        •<br>
+                        •<br>
+                      </td>
+                      <td width="95%">
+                        Online via <a href="www.utrecht.nl/bezwaar">www.utrecht.nl/bezwaar</a>.<br>
+                        Met een brief aan het college van burgemeester en wethouders van Utrecht, postbus 16200, 3500 CE
+                        Utrecht. In het bezwaarschrift staat in elk geval:
+                        <table>
+                          <tr>
+                            <td valign="top" align="right" width="5%">
+                              1.<br>
+                              2.<br>
+                              3.<br>
+                            </td>
+                            <td width="95%">
+                              uw naam, adres, telefoonnummer, datum en handtekening,<br>
+                              kenmerk en datum van deze besluitbrief,<br>
+                              reden van uw bezwaar.<br>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+              {% endcase %}
+            </div>
+          </td>
+        </tr>
+      </table>
+    {% endfor %}
+  </body>
+</html> 
