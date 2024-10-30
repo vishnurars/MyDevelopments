@@ -1,0 +1,172 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style></style>
+  </head>
+  <body>
+    {% comment %} Version 1.0 {% endcomment %}
+    {% for dtls in cast %}
+      <table border="0" width="93%" align="center" style="font-size:10pt;font-family:arial;">
+        <tr>
+          <td>
+            {% if dtls.documenttemplate_isheaderenabled == 'False' %}
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+            {% else %}
+              <table width="100%" border="0">
+                <tr>
+                  <td>
+                    <b>Vergunningen, Toezicht en Handhaving</b>
+                    <br>Afdeling Vergunningen
+                    <br>Postadres: Postbus 16200, 3500 CE Utrecht
+                    <br>Bezoekadres: Stadsplateau 1, Utrecht
+                    <br>Telefoon: 14 030
+                    <br><a href="www.utrecht.nl/parkeren">www.utrecht.nl/parkeren</a><br>
+                  </td>
+                  <td align="right">
+                    <img height="3cm" align="right" src="T:/UTRECHT/DocumentTemplates/logo2.jpg">
+                  </td>
+                </tr>
+              </table>
+              <br>
+              <table width="100%" border="0" style="font-size:10pt;font-family:arial;">
+                <tr>
+                  <td height="50%">
+                    {% if dtls.customer_type == 'Organisation' %}
+                      {{ dtls.customer_name | capitalize -}}
+                      <br>
+                    {% else %}
+                      {{ dtls.customer_Initials | capitalize }}
+                      {{ dtls.customer_middlename | downcase }}
+                      {{ dtls.customer_lastname | capitalize -}}
+                      <br>
+                    {%- endif %}
+                    {{ dtls.address_street | capitalize }}
+                    {{ dtls.address_number | capitalize }}
+                    {{ dtls.address_numberletter | capitalize }}
+                    {{ dtls.address_numberaddition | capitalize -}}
+                    <br>
+                    {{ dtls.address_postalcode | capitalize }}
+                    {{ dtls.address_city -}}
+                    <br>
+                  </td>
+                </tr>
+              </table>
+              <br>
+              <br>
+            {% endif %}
+
+            <table style="font-size:10.0pt;font-family:arial;">
+              <tr>
+                <td width="15%">
+                  <b>Behandeld door</b>
+                </td>
+                <td width="35%">Team Parkeren</td>
+                <td width="15%">
+                  <b>Ons kenmerk</b>
+                </td>
+                <td width="35%">
+                  {{ dtls.customer_id }}/{{ dtls.permitrequest_id }}
+                </td>
+              </tr>
+              <tr valign="top">
+                <td width="15%">
+                  <b>Doorkiesnummer</b>
+                </td>
+                <td width="35%">14 030</td>
+                <td width="15%">
+                  <b>Onderwerp</b>
+                </td>
+                <td width="35%">Kentekenaanpassing</td>
+              </tr>
+              <tr>
+                <td width="15%">
+                  <b>E-mail</b>
+                </td>
+                <td width="35%"></td>
+                <td width="15%">
+                  <b></b>
+                </td>
+                <td width="35%">
+                </td>
+              </tr>
+              <tr>
+                <td width="15%">
+                  <b>Uw kenmerk</b>
+                </td>
+                <td width="35%">
+                </td>
+                <td width="15%">
+                  <b>Verzonden</b>
+                </td>
+                <td width="35%">
+                  {{ dtls.formatteddate }}
+                </td>
+              </tr>
+              <tr>
+                <td width="15%"></td>
+                <td width="35%"></td>
+                <td colspan="4">Bij antwoord datum, kenmerk en onderwerp vermelden</td>
+              </tr>
+            </table>
+            <br>
+            <br>
+            {% case dtls.permittype_code %}
+              {% when 'ZRS', 'ZRH', 'ZRD', 'ZRU' %}
+                Beste {{ dtls.customer_contactperson | capitalize }},<br>
+                <br>
+              {% else %}
+                Beste {{ dtls.customer_Initials | capitalize }}
+                {{ dtls.customer_middlename | downcase }}
+                {{ dtls.customer_lastname | capitalize }},<br>
+                <br>
+            {% endcase %}
+            U hebt een aanpassing van het kenteken van uw {{ dtls.permit_permittypename }} met het nummer {{ dtls.permit_permitnumber }} doorgegeven. Dit is nu aangepast.
+            <br>
+            <br>
+            <!-- INHOUD -->
+            <table>
+              <tr>
+                <th align="left" style="border-bottom: 2pt dashed black;">
+                  <b>Uw vergunning</b>
+                </th>
+                <th align="left" style="border-bottom: 2pt dashed black;">
+                </th>
+              </tr>
+              <tr>
+                <td>Soort vergunning</td>
+                <td>
+                  {{ dtls.permit_permittypename }}
+                </td>
+              </tr>
+              <tr>
+                <td>Kenteken</td>
+                <td>{{ dtls.vehicle_formattedlicenseplate }}{{ dtls.vehicles_additional }}</td>
+              </tr>
+              <tr>
+                <td>Productnummer</td>
+                <td>
+                  {{ dtls.permit_permitnumber }}
+                </td>
+              </tr>
+            </table>
+            <br>
+            <b>Vragen?</b>
+            <br>Hebt u vragen? Bel ons gerust via telefoonnummer 14 030 of stel uw vraag op onze website <a href="www.utrecht.nl/parkeervraag">www.utrecht.nl/parkeervraag</a>.
+            <br>
+            <br>
+            <br>Met vriendelijke groet,
+            <br>
+            <br>
+            <img height="2.5cm" src="T:/UTRECHT/DocumentTemplates/Signature.png"><br>
+            <br>M. Prijs,
+            <br>Hoofd Vergunningen<br>
+          </td>
+        </tr>
+      </table>
+    {% endfor %}
+  </body>
+</html> 

@@ -1,0 +1,40 @@
+<html>
+  {% comment %} Version 1.0 {% endcomment %}
+  <p style="line-height:13pt;font-size:10pt;font-family:Arial;">
+    {% for dtls in cast %}
+      <br>
+      {% case dtls.permittype_code %}
+        {% when 'ZRS', 'ZRH', 'ZRD', 'ZRU' %}
+          Beste {{ dtls.customer_contactperson | capitalize }},<br>
+          <br>
+        {% else %}
+          Beste {{ dtls.customer_Initials | capitalize }}
+          {{ dtls.customer_middlename | downcase }}
+          {{ dtls.customer_lastname | capitalize }},<br>
+          <br>
+      {% endcase %}
+
+      U hebt op {{ dtls.permitrequest_requestdate | date: 'dd-MM-yyyy' }} een {{ dtls.permit_permittypename }} aangevraagd. 
+      Op dit moment is het niet mogelijk om aan u een {{ dtls.permit_permittypename }} toe te wijzen. 
+      Voor de uitgifte van een parkeervergunning bestaat in uw rayon een wachtlijst. In de bijlage vindt u het besluit.<br>
+      <br>
+      <b>Vragen</b><br> 
+      Hebt u nog vragen? Bel ons via telefoonnummer 14 030 of stel uw vraag op onze website
+      <a href="www.utrecht.nl/parkeervraag">www.utrecht.nl/parkeervraag</a>.<br>
+      <br>
+      Met vriendelijke groet,<br>
+      <br>
+      Gemeente Utrecht<br>
+      Afdeling Vergunningen, team Parkeren<br>
+      <br>
+      <img src="https://www.utrecht.nl/templates/nieuwsbrieven/images/logo-gem-utrecht.png" alt="Gemeente Utrecht logo"><br>
+      <br>
+      <b>Klanttevredenheidsonderzoek</b>
+      <br>De gemeente Utrecht vindt een goede dienstverlening erg belangrijk. 
+      Daarom zijn wij continu bezig om onze dienstverlening te verbeteren. 
+      Wij stellen het op prijs als u ons klanttevredenheidsonderzoek invult. 
+      Dit onderzoek kost slechts 3 minuten van uw tijd. Hartelijk dank voor het invullen. 
+      Klik <a href="https://www.kcmsurvey.com/qSwu5531b8be2748a8a54ddcfc37MaSd">hier</a> om naar het onderzoek te gaan.<br>
+    {% endfor %}
+  </p>
+</html> 

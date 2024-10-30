@@ -1,0 +1,319 @@
+<html>
+<head>
+</head>
+<body>
+<table border="0" width="95%" align="center">
+<tr>
+<td>
+{% for dtls in cast %}
+
+{% if dtls.documenttemplate_isheaderenabled == "False" %}
+<br><br><br><br><br>
+{% else %}
+<table width=100% border="0">
+<tr>
+    <td width=55% height=50%>
+        <table width=100% border="0">
+            <tr><td>{{dtls.headertext}}</td><tr>
+            <tr><td><br><br><br></td><tr>
+        </table>
+    </td>
+    <td width="45%" height=100%>
+        <table width=100% border="0">
+            <tr>
+                <td height=50%><br><br><br></td>
+            <tr>
+            <tr>
+                <td height=50%>
+                    {% if dtls.customer_type == "Organisation" %}
+                        <p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.customer_name | capitalize}} </font></span></p>
+                    {% else %}
+                        <p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.customer_Initials | capitalize}} {{dtls.customer_middlename | downcase}} {{dtls.customer_lastname | capitalize}} </font></span></p>
+                    {% endif %}
+                    <p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.address_street | capitalize}} {{dtls.address_number | capitalize}} {{dtls.address_numberletter | capitalize}} {{dtls.address_numberaddition | capitalize}}</font></span></p>
+                    <p><span style='font-size:11.0pt'><font color="black" face="arial">{{dtls.address_postalcode | capitalize}} {{dtls.address_city}}</font></span></p>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
+</table>
+<br>
+<br>
+{% endif %}
+
+<div style="line-height: 10pt;">
+<table>
+<tr>
+<td>
+	<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>NOTA</b></font></span></p>
+</td>
+</tr>
+</table>
+
+<table border="1">
+<tr>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>Notadatum</b> {{dtls.today | date: "dd-MM-yyyy"}}</font></span></p>	
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>Debiteurnr.</b> {{dtls.customer_purchasenumber}}</font></span></p>		
+	</td>
+	<td>
+		<p><span style='font-size:11.0pt'><font color="black" face="arial"><b>Notanr.</b> {{dtls.invoice_number}}</font></span></p>		
+	</td>	
+</tr>
+</table>
+</div>
+<br>
+</td>
+</tr>
+</table>
+<p><span style='font-size:6.0pt'><font color="white" face="arial">--</font></span></p>
+
+<table border="0" width="95%" align="center">
+<tr>
+<td>
+<div style="line-height: 13pt;">
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Deze nota gaat over de verlenging van de onderstaande parkeervergunning(en).</font></span></p>
+<p><span style='font-size:5.0pt'><font color="white" face="arial"> -- </font></span></p>
+</div>
+</td>
+</tr>
+</table>
+
+<div>
+<table width=95% border=0 align="center">
+<tr>
+<td width=80%> <b><span style='font-size:11.0pt'><font color="black" face="arial">Omschrijving</font></span></b></td>
+<td width=20% align="right"> <b><span style='font-size:11.0pt text-align:right'><font color="black" face="arial">Bedrag</font></span></b></td>
+</tr>
+</table>
+</div>
+
+{% if dtls.permitcounttype == "single" %}
+
+<div>
+<table border=1 width=95% align="center">
+<tr>
+<td width=83% valign=top>
+<table width=100% border=0>
+{% for renew in dtls.renewaloutputmodel %}
+{% for inv in renew.collectiveinvoicemodels %}
+<tr>
+<td>
+<p><span style='font-size:2.0pt'><font color="white" face="arial">--</font></span></p>
+<p><span style='font-size:11.0pt'><font color="black" face="arial">{{renew.permittype_permittype}}&nbsp;{{inv.permit_permitnumber}}<br>
+Vergunninggebied:&nbsp;{{inv.zone_description}}<br>
+{% if inv.vehicles_additional != null %}
+Kentekens: {{inv.vehicle_licenseplate}}, {{inv.vehicles_additional}}<br>
+{% elsif inv.vehicle_licenseplate != null %}
+Kenteken: {{inv.vehicle_licenseplate}}<br>
+{% endif %}
+{% if inv.permit_newenddate != null% and inv.permit_newenddate != "" %}
+Geldig tot en met {{inv.permit_newenddate | date: "dd-MM-yyyy"}}
+{% else %}
+{% endif %}
+</font></span></p>
+<p><span style='font-size:5.0pt'><font color="white" face="arial">--</font></span></p>
+</td>
+</tr>
+{% endfor %}
+<tr>
+<td valign=top><p><span style='font-size:11.0pt'><font color="black" face="arial">BTW&nbsp;{{renew.invoiceline_vatpercentage}}%</font></span></p>
+<p><span style='font-size:11.0pt'><font color="white" face="arial">--</font></span></p>
+</td>
+</tr>
+</table>
+</td>
+{% endfor %}
+
+<td width=17% valign=top>
+<table width=100% border=0>
+{% for renew in dtls.renewaloutputmodel %}
+{% for inv in renew.collectiveinvoicemodels %}
+<tr>
+<td align="right">
+<p><span style='font-size:2.0pt'><font color="white" face="arial">--</font></span></p>
+<p><span style='font-size:11.0pt'><font color="black" face="arial">&nbsp;€ {{inv.invoiceline_amountexvat}}</font></span></p>
+<p><span style='font-size:11.0pt'><font color="white" face="arial">--</font></span></p>
+{% if inv.vehicle_licenseplate != null %}
+<p><span style='font-size:11.0pt'><font color="white" face="arial">--</font></span></p>
+{% endif %}
+{% if inv.permit_newenddate != null% and inv.permit_newenddate != "" %}
+<p><span style='font-size:11.0pt'><font color="white" face="arial">--</font></span></p>
+{% endif %}
+<p><span style='font-size:5.0pt'><font color="white" face="arial">--</font></span></p>
+</td>
+</tr>
+{% endfor %} 
+<tr>
+<td td align="right" width=100% valign=top><p><span style='font-size:11.0pt'><font color="black" face="arial">&nbsp;€ {{renew.invoiceline_vatamount}}</font></span></p>
+<p><span style='font-size:11.0pt'><font color="white" face="arial">--</font></span></p>
+</td>
+</tr>
+{% endfor %} 
+</table>
+
+</td>
+</tr>
+</table>
+
+<table width=95% border=0 align="center">
+<tr>
+<td width=83%>
+<p><b><span style='font-size:11.0pt'><font color="black" face="arial">Totaal</font></span></b></p>
+<p><span style='font-size:5.0pt'><font color="white" face="arial">--</font></span></p>
+</td>
+
+<td width=17%  border=2>
+<table border=0>
+<tr><td align="right" vertical-align=middle><b><span style='font-size:11.0pt'><font color="black" face="arial">&nbsp;€ {{dtls.invoice_amount}}<br/></font></span></b>
+<p><span style='font-size:5.0pt'><font color="white" face="arial">--</font></span></p>
+</td></tr>
+</table>
+</td>
+</tr>
+
+</table>
+</div>
+
+{% else %}
+
+<div>
+<table border=1 width=95% align="center">
+<tr>
+<td width=80% valign=top>
+<table width=100% border=0> 
+
+{% for renew in dtls.renewaloutputmodel %}
+<tr><td valign=top><p><span style='font-size:11.0pt'><font color="black" face="arial"><b>{{renew.permittype_permittype}}</b></font></span></p></td></tr>
+<tr><td valign=top>
+{% for inv in renew.collectiveinvoicemodels %}
+{% if inv.vehicle_licenseplate != null% and inv.vehicle_licenseplate != "" %} 
+<p><span style='font-size:11.0pt'><font color="black" face="arial">{{inv.permit_permitnumber}}, {{inv.zone_description}}, {{inv.vehicle_licenseplate}}, geldig t/m {{inv.permit_newenddate | date: "dd-MM-yyyy"}}</font></span></p>
+{% else %}
+<p><span style='font-size:11.0pt'><font color="black" face="arial">{{inv.permit_permitnumber}}, {{inv.zone_description}}, geldig t/m {{inv.permit_newenddate | date: "dd-MM-yyyy"}}</font></span></p>
+{% endif %}
+{% endfor %}
+</td>
+</tr>
+<tr>
+<td valign=top>
+<p><span style='font-size:4.0pt'><font color="white" face="arial"> -- </font></span></p>
+<p><span style='font-size:11.0pt'><font color="black" face="arial">BTW&nbsp;{{renew.invoiceline_vatpercentage}}%</font></span></p>
+<p><span style='font-size:4.0pt'><font color="white" face="arial">--</font></span></p>
+</td>
+</tr>
+<p><span style='font-size:4.0pt'><font color="white" face="arial">--</font></span></p>
+{% endfor %} 
+
+
+</table>
+</td>
+<td width=20% valign=top>
+<table width=100% border=0>
+
+{% for renew in dtls.renewaloutputmodel %}
+<tr><td valign=top><p><span style='font-size:11.0pt'><font color="white" face="arial">--</font></span></p></td></tr>
+<tr><td align="right">
+{% for inv in renew.collectiveinvoicemodels %}
+<p><span style='font-size:11.0pt'><font color="black" face="arial">&nbsp;€ {{inv.invoiceline_amountexvat}}</font></span></p>
+{% endfor %} 
+</td></tr>
+
+<tr>
+<td td align="right" width=100% valign=top>
+<p><span style='font-size:4.0pt'><font color="white" face="arial">--</font></span></p>
+<p><span style='font-size:11.0pt'><font color="black" face="arial">&nbsp;€ {{renew.invoiceline_vatamount}}</font></span></p>
+<p><span style='font-size:4.0pt'><font color="white" face="arial">--</font></span></p>
+</td></tr>
+{% endfor %} 
+
+</table>
+<p><span style='font-size:4.0pt'><font color="white" face="arial">--</font></span></p>
+</td>
+</tr>
+</table>
+
+<table width=95% align="center">
+<tr>
+<td width=80%>
+<p><b><span style='font-size:11.0pt'><font color="black" face="arial">
+Totaal
+</font></span></b></p>
+<p><span style='font-size:5.0pt'><font color="white" face="arial">
+--
+</font></span></p>
+</td>
+
+<td width=20%  border=2>
+<table border=0>
+<tr><td align="right" vertical-align=middle>
+<b><span style='font-size:11.0pt'><font color="black" face="arial"> 
+&nbsp;€ {{dtls.invoice_amount}}<br/>
+</font></span></b>
+<p><span style='font-size:5.0pt'><font color="white" face="arial">--</font></span></p>
+</td></tr>
+
+</table>
+</td>
+</tr>
+
+</table>
+</div>
+{% endif %}
+<br>
+
+{% if dtls.customer_directdebit != null and dtls.customer_directdebit == true %}
+<table border=0 width=95% align="center">
+<tr>
+<td>
+<div style="line-height: 13pt;">
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">U heeft een incasso-machtiging aan ons afgegeven. Wij schrijven het factuurbedrag omstreeks de 25ste van de maand af van het bij ons bekende IBAN.</font></span></p>
+</div>
+</td>
+</tr>
+</table>
+{% else %}
+
+<table border=0 width=95% align="center">
+<tr>
+<td>
+<div style="line-height: 13pt;">
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial"><b>Betaling</b><br>
+U kunt de verlenging van uw {% if dtls.permitcounttype == "single" %} parkeervergunning {% else %} parkeervergunningen {% endif %} zelf regelen in het digitaal loket Parkeren van de gemeente Beverwijk. U gaat hiervoor naar <a href="https://parkeervergunningen.beverwijk.nl/" style="color: blue">https://parkeervergunningen.beverwijk.nl</a> en logt in met {% if dtls.customer_type == "Organisation" %} eHerkenning. {% else %} DigiD. {% endif %} In het dashboard vindt u een overzicht van de te betalen bedragen onder ‘Open acties’. U kunt de betaling direct door middel van iDeal in het digitaal loket doen. Daarna {% if dtls.permitcounttype == "single" %} is uw parkeervergunning verlengd {% else %} zijn uw parkeervergunningen verlengd {% endif %} zoals hierboven aangegeven.</font></span></p>
+</div>
+</td>
+</tr>
+</table>
+
+<table border=0 width=95% align="center">
+<tr>
+<td>
+<div style="line-height: 13pt;">
+{% if dtls.permitcounttype == "single" %}
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Let op: wanneer u niet op tijd betaalt, verloopt uw parkeervergunning per {{dtls.permit_oldenddate | date: "dd-MM-yyyy"}}.</font></span></p>
+{% else %}
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial">Let op: wanneer u niet op tijd betaalt, verlopen uw parkeervergunningen per {{dtls.permit_oldenddate | date: "dd-MM-yyyy"}}.</font></span></p>
+{% endif %}
+</div>
+</td>
+</tr>
+</table>
+{% endif %}
+<p><span style='font-size:6pt'><font color="white" face="arial"> -- </font></span></p>
+
+<table border=0 width=95% align="center">
+<tr>
+<td>
+<div style="line-height: 13pt;">
+<p><span style='font-size:11.0pt; text-align:left'><font color="black" face="arial"><b>Wilt u meer weten?</b><br>
+Voor vragen kunt u ons bereiken per e-mail via <a href="mailto:{{dtls.tenant_email}}" style="color: blue">{{dtls.tenant_email}}</a> en via telefoonnummer {{dtls.tenant_telephoneno}}. Alle informatie over parkeerproducten vindt u op de website: <a href="{{dtls.tenant_website}}" style="color: blue">{{dtls.tenant_website}}</a>.</font></span></p>
+</div>
+</td>
+</tr>
+</table>
+{% endfor %}
+</body>
+</html>
